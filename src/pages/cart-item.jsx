@@ -5,14 +5,13 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
+import { TextField } from "@mui/material";
 import { ProductContext } from "../context/product-context";
 
-export default function Product(props) {
+export default function CartItem(props) {
   const { id, title, description, price, rating, thumbnail } = props.data;
 
-  const { addToCart, cartItems } = useContext(ProductContext);
-
-  const cartItemAmount = cartItems[id];
+  const { cartItems, addToCart, removeFromCart, updateCartItemAmount } = useContext(ProductContext);
 
   return (
     <Card
@@ -23,7 +22,7 @@ export default function Product(props) {
         justifyContent: "space-between",
       }}
     >
-      <CardMedia component="img" alt={title} image={thumbnail} height={180} />
+      <CardMedia component="img" height={180} alt={title} image={thumbnail} />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {title}
@@ -39,8 +38,30 @@ export default function Product(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => addToCart(id)}>
-          Add to Cart {cartItemAmount > 0 && <>({cartItemAmount})</>}
+        <Button
+          size="small"
+          variant="contained"
+          color="primary"
+          onClick={() => removeFromCart(id)}
+        >
+          {" "}
+          -{" "}
+        </Button>
+        <TextField
+          size="small"
+          type="number"
+          value={cartItems[id]}
+          inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          onChange={(e) => updateCartItemAmount(e.target.value, id)}
+        />
+        <Button
+          size="small"
+          variant="contained"
+          color="primary"
+          onClick={() => addToCart(id)}
+        >
+          {" "}
+          +{" "}
         </Button>
       </CardActions>
     </Card>
